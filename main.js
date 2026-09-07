@@ -7,8 +7,8 @@
  *   3. Animaciones GSAP (respetan prefers-reduced-motion)
  *
  * Para reemplazar un placeholder de producto por una foto real:
- *   - Súbanla a /assets/products/<archivo>.jpg
- *   - En el arreglo PRODUCTS de abajo, agreguen `image: 'assets/products/<archivo>.jpg'`
+ *   - Súbanla directo a la raíz del repo, junto a index.html
+ *   - En el arreglo PRODUCTS de abajo, agreguen `image: '<archivo>.jpg'`
  *   - No hace falta tocar el CSS ni las animaciones.
  * -----------------------------------------------------------------------
  */
@@ -16,55 +16,55 @@
 const PRODUCTS = [
   {
     emoji: '🍌',
-    image: 'assets/products/chifle-salado.jpg',
+    image: 'chifle-salado.jpg',
     title: 'Chifles fritos salados',
     desc: 'Plátano verde cortado fino, frito y salado al punto justo de crocante.'
   },
   {
     emoji: '🍯',
-    image: 'assets/products/chifle-dulce.jpg',
+    image: 'chifle-dulce.jpg',
     title: 'Chifles dulces',
     desc: 'La misma receta de siempre, con un toque dulce para los que prefieren otro perfil de sabor.'
   },
   {
     emoji: '🥔',
-    image: 'assets/products/papas-hojuelas.jpg',
+    image: 'papas-hojuelas.jpg',
     title: 'Papas en hojuelas',
     desc: 'Hojuelas finas y crocantes, fritas en tandas cortas todos los días.'
   },
   {
     emoji: '🍠',
-    image: 'assets/products/camote.jpg',
+    image: 'camote.jpg',
     title: 'Camote frito',
     desc: 'Tiras de camote frito con el punto justo de dulzor natural.'
   },
   {
     emoji: '🌱',
-    image: 'assets/products/arvejita.jpg',
+    image: 'arvejita.jpg',
     title: 'Arveja frita salada',
     desc: 'Arvejita verde frita y salada, crocante de principio a fin.'
   },
   {
     emoji: '🫘',
-    image: 'assets/products/garbanzo.jpg',
+    image: 'garbanzo.jpg',
     title: 'Garbanzo frito salado',
     desc: 'Garbanzo tostado y salado, un clásico para acompañar cualquier reunión.'
   },
   {
     emoji: '🥜',
-    image: 'assets/products/mani-frito.png',
+    image: 'mani-frito.png',
     title: 'Maní frito salado',
     desc: 'Maní 100% peruano, frito y salado, calidad premium.'
   },
   {
     emoji: '🍇',
-    image: 'assets/products/mani-pasas.png',
+    image: 'mani-pasas.png',
     title: 'Maní con pasas',
     desc: 'Maní frito salado combinado con uvas pasas, calidad premium.'
   },
   {
     emoji: '🍬',
-    image: 'assets/products/mani-confitado.png',
+    image: 'mani-confitado.png',
     title: 'Maní confitado',
     desc: 'Maní con cobertura de caramelo y ajonjolí.'
   }
