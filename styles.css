@@ -117,8 +117,8 @@ section{position:relative;}
 .story-line{
   font-family:var(--display);font-weight:700;
   font-size:clamp(1.6rem,4vw,2.8rem);line-height:1.25;
-  color:rgba(255,255,255,0.9);
-  opacity:0.08;
+  color:#fff;
+  opacity:0;
   transform:translateY(18px);
   transition:none;
 }
