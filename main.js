@@ -241,7 +241,7 @@ function initAnimations() {
       storyTl.to(line, { opacity: 1, y: 0, duration: 1, ease: 'none' }, i);
       if (i > 0) {
         // La línea anterior "desaparece": se desvanece y sube un poco más
-        storyTl.to(storyLines[i - 1], { opacity: 0.08, y: -18, duration: 1, ease: 'none' }, i);
+        storyTl.to(storyLines[i - 1], { opacity: 0, y: -18, duration: 1, ease: 'none' }, i);
       }
     });
   }
