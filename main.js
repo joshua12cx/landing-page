@@ -224,24 +224,20 @@ function initAnimations() {
 
   gsap.to('.hero-strip', { xPercent: -25, ease: 'none', repeat: -1, duration: 14 });
 
-  // ---- "Quiénes somos": líneas que se iluminan en secuencia con el scroll ----
+  // ---- "Quiénes somos": todo el bloque aparece junto al entrar, desaparece junto al salir ----
   const storyLines = gsap.utils.toArray('.story-line');
   if (storyLines.length) {
-    const storyTl = gsap.timeline({
+    gsap.to(storyLines, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: 'power2.out',
+      stagger: 0.06,
       scrollTrigger: {
         trigger: '.story-pin',
-        start: 'top top',
-        end: () => '+=' + (storyLines.length * 55),
-        scrub: true,
-        pin: true
-      }
-    });
-    storyLines.forEach((line, i) => {
-      // La línea actual "aparece": sube y se vuelve visible
-      storyTl.to(line, { opacity: 1, y: 0, duration: 1, ease: 'none' }, i);
-      if (i > 0) {
-        // La línea anterior "desaparece": se desvanece y sube un poco más
-        storyTl.to(storyLines[i - 1], { opacity: 0, y: -18, duration: 1, ease: 'none' }, i);
+        start: 'top 70%',
+        end: 'bottom 30%',
+        toggleActions: 'play reverse play reverse'
       }
     });
   }
