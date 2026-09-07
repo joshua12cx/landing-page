@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRANCO'S — Snacks que sacan sonrisas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-soft:#FFF6F5;
+    --ink:#231512;
+    --muted:#7C6B66;
+    --red-1:#EF4444;
+    --red-2:#DC2626;
+    --red-3:#B91C1C;
+    --line:rgba(35,21,18,0.1);
+    --display:'Baloo 2', sans-serif;
+    --body:'Inter', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);overflow-x:hidden;line-height:1.5;}
+  ::selection{background:var(--red-1);color:#fff;}
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3{font-family:var(--display);font-weight:700;}
+  .container{max-width:1180px;margin:0 auto;padding:0 6vw;}
+  :focus-visible{outline:3px solid var(--red-2);outline-offset:3px;border-radius:6px;}
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1rem 6vw;background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-brand{display:flex;align-items:center;gap:0.7rem;}
+  .nav-badge{
+    width:40px;height:40px;border-radius:12px;background:#fff;overflow:hidden;
+    box-shadow:0 6px 16px rgba(185,28,28,0.18);display:flex;align-items:center;justify-content:center;
+  }
+  .nav-badge img{width:130%;height:130%;object-fit:cover;}
+  .nav-name{font-family:var(--display);font-weight:700;font-size:1.1rem;color:var(--ink);}
+  .nav-links{display:flex;gap:2rem;font-size:0.95rem;font-weight:500;color:var(--ink);}
+  .nav-links a{opacity:0.75;transition:opacity .2s;}
+  .nav-links a:hover{opacity:1;color:var(--red-2);}
+  @media(max-width:720px){.nav-links{display:none;}}
+
+  /* HERO */
+  .hero{
+    position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:center;padding-top:5rem;
+    background:linear-gradient(165deg, var(--red-1) 0%, var(--red-2) 45%, var(--red-3) 100%);
+    color:#fff;
+  }
+  .hero-circle{position:absolute;border-radius:50%;background:rgba(255,255,255,0.09);}
+  .hc1{width:280px;height:280px;top:-6%;left:-4%;}
+  .hc2{width:160px;height:160px;top:6%;right:12%;background:rgba(255,255,255,0.12);}
+  .hc3{width:340px;height:340px;bottom:-14%;left:38%;}
+  .hc4{width:220px;height:220px;bottom:6%;right:-6%;background:rgba(255,255,255,0.13);}
+  .hero-inner{position:relative;z-index:2;width:100%;max-width:720px;}
+  .hero-badge{display:flex;align-items:center;gap:0.8rem;margin-bottom:2.2rem;}
+  .hero-badge .badge-icon{
+    width:52px;height:52px;border-radius:14px;background:#fff;overflow:hidden;
+    box-shadow:0 10px 24px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;
+  }
+  .hero-badge .badge-icon img{width:130%;height:130%;object-fit:cover;}
+  .hero-badge span{font-family:var(--display);font-weight:700;font-size:1.4rem;color:#fff;}
+  .hero-copy h1{font-size:clamp(2.6rem,6vw,4.2rem);line-height:1.12;color:#fff;}
+  .hero-copy h1 .dim{color:rgba(255,255,255,0.62);}
+  .hero-copy .lede{margin-top:1.3rem;max-width:44ch;color:rgba(255,255,255,0.88);}
+  .hero-features{list-style:none;margin-top:2.4rem;display:flex;flex-direction:column;gap:1rem;}
+  .hero-features li{display:flex;align-items:center;gap:0.9rem;font-size:0.98rem;color:#fff;}
+  .hero-features .f-icon{
+    width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,0.16);
+    display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex:0 0 auto;
+  }
+  .hero-scroll{
+    position:absolute;bottom:2rem;left:6vw;z-index:2;
+    display:flex;align-items:center;gap:0.7rem;font-size:0.85rem;color:rgba(255,255,255,0.75);font-weight:500;
+  }
+  .hero-scroll .line{width:2px;height:30px;background:rgba(255,255,255,0.3);position:relative;overflow:hidden;border-radius:2px;}
+  .hero-scroll .line::after{
+    content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;
+    background:#fff;animation:scrollpulse 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollpulse{ 0%{top:-100%;} 60%{top:100%;} 100%{top:100%;} }
+  .hero-strip{
+    position:absolute;bottom:0;left:0;right:0;z-index:2;display:flex;white-space:nowrap;
+    border-top:1px solid rgba(255,255,255,0.18);padding:0.9rem 0;
+  }
+  .hero-strip span{
+    font-family:var(--display);font-size:0.95rem;font-weight:600;padding:0 2.2rem;
+    color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:2.2rem;
+  }
+  .hero-strip span::after{content:'•';color:rgba(255,255,255,0.35);}
+
+  /* SECTION shared */
+  section{position:relative;}
+  .bg-soft{background:var(--bg-soft);}
+  .section-pad{padding:8rem 0;}
+  .kicker{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    background:rgba(239,68,68,0.1);color:var(--red-2);font-weight:600;font-size:0.9rem;
+    padding:0.45rem 1.1rem;border-radius:999px;margin-bottom:1.3rem;
+  }
+  .big-line{font-size:clamp(1.9rem,4vw,3rem);line-height:1.15;max-width:17ch;}
+  .lede{max-width:52ch;color:var(--muted);font-size:1.08rem;margin-top:1.6rem;}
+
+  /* QUIENES SOMOS */
+  .story{display:grid;grid-template-columns:1.1fr 0.9fr;gap:4rem;align-items:center;}
+  @media(max-width:860px){.story{grid-template-columns:1fr;}}
+  .story-art{
+    aspect-ratio:4/5;position:relative;overflow:hidden;
+    background:linear-gradient(155deg, var(--red-1), var(--red-3));
+    border-radius:38px 38px 38px 120px;
+  }
+  .story-art .face{
+    position:absolute;bottom:2rem;right:2rem;width:96px;height:96px;
+    background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  }
+  .story-art .face::before{content:'🙂';font-size:2.6rem;}
+
+  /* PRODUCTOS — horizontal pin */
+  .products-pin{
+    height:100vh;position:relative;overflow:hidden;background:var(--ink);
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .products-head{padding:0 6vw;margin-bottom:2.2rem;}
+  .products-head .kicker{background:rgba(255,255,255,0.12);color:#fff;}
+  .products-head h2{color:#fff;}
+  .products-track{display:flex;gap:1.8rem;padding-left:6vw;will-change:transform;}
+  .p-card{
+    flex:0 0 auto;width:min(72vw,400px);background:#2E2320;
+    border:1px solid rgba(255,255,255,0.08);border-radius:28px;
+    padding:2rem;display:flex;flex-direction:column;justify-content:flex-end;
+    aspect-ratio:3/4;position:relative;
+  }
+  .p-card .emoji{position:absolute;top:1.6rem;right:1.8rem;font-size:1.6rem;}
+  .p-card .swatch{width:100%;aspect-ratio:1.4/1;margin-bottom:1.5rem;border-radius:20px;}
+  .p-card h3{font-size:1.4rem;margin-bottom:0.5rem;color:#fff;}
+  .p-card p{color:#BDB2AD;font-size:0.95rem;max-width:32ch;}
+
+  /* PROCESO */
+  .process-list{margin-top:3rem;display:flex;flex-direction:column;gap:0;}
+  .p-step{
+    display:grid;grid-template-columns:56px 1fr 1.4fr;gap:1.6rem;
+    padding:1.9rem 0;border-bottom:1px solid var(--line);align-items:center;
+  }
+  @media(max-width:760px){.p-step{grid-template-columns:44px 1fr;}.p-step .step-desc{grid-column:2;}}
+  .p-step .step-num{
+    width:44px;height:44px;border-radius:50%;background:var(--red-1);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;
+  }
+  .p-step h3{font-size:1.2rem;}
+  .p-step p{color:var(--muted);}
+
+  /* CIFRAS */
+  .stats{background:var(--red-2);display:grid;grid-template-columns:repeat(4,1fr);gap:1px;}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--red-3);padding:3.2rem 2rem;text-align:left;}
+  .stat .n{font-family:var(--display);font-weight:700;font-size:clamp(2.5rem,5vw,3.8rem);color:#fff;display:block;}
+  .stat .l{color:rgba(255,255,255,0.8);font-size:0.92rem;margin-top:0.4rem;font-weight:500;}
+
+  /* VALORES */
+  .values{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem;}
+  @media(max-width:760px){.values{grid-template-columns:1fr;}}
+  .value{background:#fff;border:1px solid var(--line);border-radius:24px;padding:2.2rem;}
+  .value .emoji{font-size:1.8rem;margin-bottom:1rem;display:block;}
+  .value h3{font-size:1.15rem;margin-bottom:0.6rem;color:var(--ink);}
+  .value p{color:var(--muted);font-size:0.95rem;}
+
+  /* CONTACTO / FOOTER */
+  .cta{background:linear-gradient(155deg, var(--red-1), var(--red-3));padding:7rem 0 4.5rem;color:#fff;}
+  .cta .kicker{background:rgba(255,255,255,0.18);color:#fff;}
+  .cta h2{font-size:clamp(2.2rem,5.4vw,3.6rem);max-width:15ch;color:#fff;}
+  .cta .lede{color:rgba(255,255,255,0.9);}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:0.7rem;margin-top:2.2rem;padding:1rem 2rem;
+    background:#fff;color:var(--red-3);font-weight:700;border-radius:999px;font-family:var(--display);
+    transition:transform .2s ease;
+  }
+  .cta-btn:hover{transform:scale(1.05) rotate(-1deg);}
+
+  footer{
+    border-top:1px solid var(--line);padding:2.6rem 0;
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:1.4rem;
+    color:var(--muted);font-size:0.9rem;
+  }
+  footer .f-links{display:flex;gap:1.6rem;}
+  footer .f-links a{opacity:0.85;}
+  footer .f-links a:hover{opacity:1;color:var(--red-2);}
+
+  .reveal{opacity:0;transform:translateY(28px);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="nav-badge"><img src="assets/logo_franco.png" alt=""></span>
+    <span class="nav-name">Franco's</span>
+  </div>
+  <div class="nav-links">
+    <a href="#quienes-somos">Nosotros</a>
+    <a href="#productos">Productos</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-circle hc1"></div>
+  <div class="hero-circle hc2"></div>
+  <div class="hero-circle hc3"></div>
+  <div class="hero-circle hc4"></div>
+  <div class="container hero-inner">
+    <div class="hero-badge reveal">
+      <span class="badge-icon"><img src="assets/logo_franco.png" alt=""></span>
+      <span>Franco's</span>
+    </div>
+    <div class="hero-copy">
+      <h1 class="reveal">Sabor que se hace<br><span class="dim">en casa, siempre.</span></h1>
+      <p class="lede reveal">Freímos en tandas pequeñas, probamos cada lote antes de que salga de planta, y seguimos usando la misma receta familiar desde 1998.</p>
+      <ul class="hero-features reveal">
+        <li><span class="f-icon">🥔</span>Ingredientes 100% locales</li>
+        <li><span class="f-icon">🔥</span>Frito en tandas frescas, todos los días</li>
+        <li><span class="f-icon">🚚</span>Delivery mayorista en Lima Metropolitana</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="line"></div><span>Desliza</span></div>
+  <div class="hero-strip">
+    <span>ARTESANAL</span><span>DESDE 1998</span><span>LIMA, PERÚ</span><span>SIN CONSERVANTES</span><span>ARTESANAL</span><span>DESDE 1998</span><span>LIMA, PERÚ</span><span>SIN CONSERVANTES</span>
+  </div>
+</section>
+
+<!-- QUIENES SOMOS -->
+<section id="quienes-somos" class="section-pad">
+  <div class="container story">
+    <div>
+      <div class="kicker">🙋 Quiénes somos</div>
+      <h2 class="big-line reveal">Empezamos en una cocina de barrio, no en un laboratorio de sabores</h2>
+      <p class="lede reveal">FRANCO'S nació de una receta familiar de piqueos que se vendía en ferias de fin de semana. Hoy seguimos friendo en tandas pequeñas, porque el tamaño no cambia la manera en que hacemos las cosas.</p>
+      <p class="lede reveal">Trabajamos con productores locales de papa, maíz y camote, y mantenemos el mismo punto de sazón que definió la marca hace más de dos décadas.</p>
+    </div>
+    <div class="story-art reveal"><div class="face"></div></div>
+  </div>
+</section>
+
+<!-- PRODUCTOS - scroll horizontal -->
+<section id="productos" class="products-pin">
+  <div class="products-head">
+    <div class="kicker">🍿 Catálogo</div>
+    <h2 class="big-line">Lo que sale de nuestra cocina</h2>
+  </div>
+  <div class="products-track" id="productsTrack">
+    <div class="p-card">
+      <span class="emoji">🍌</span>
+      <div class="swatch" style="background:linear-gradient(140deg,#EF4444,#B91C1C);"></div>
+      <h3>Chifles clásicos</h3>
+      <p>Plátano verde cortado fino, frito en tandas cortas para un crocante parejo.</p>
+    </div>
+    <div class="p-card">
+      <span class="emoji">🌶️</span>
+      <div class="swatch" style="background:linear-gradient(140deg,#DC2626,#7C1414);"></div>
+      <h3>Papa nativa picante</h3>
+      <p>Variedades de papa andina con nuestra mezcla de ají amarillo tostado.</p>
+    </div>
+    <div class="p-card">
+      <span class="emoji">🫘</span>
+      <div class="swatch" style="background:linear-gradient(140deg,#F87171,#B91C1C);"></div>
+      <h3>Habitas saladas</h3>
+      <p>Tostadas al punto, sin freír, para un piqueo más ligero.</p>
+    </div>
+    <div class="p-card">
+      <span class="emoji">🍠</span>
+      <div class="swatch" style="background:linear-gradient(140deg,#EF4444,#7C1414);"></div>
+      <h3>Camote dulce</h3>
+      <p>Láminas de camote horneado con un toque de canela, nuestra línea más nueva.</p>
+    </div>
+    <div class="p-card">
+      <span class="emoji">🎉</span>
+      <div class="swatch" style="background:linear-gradient(140deg,#B91C1C,#450A0A);"></div>
+      <h3>Mix de la casa</h3>
+      <p>La selección que armamos para ferias, combinando los cuatro productos anteriores.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section id="proceso" class="section-pad bg-soft">
+  <div class="container">
+    <div class="kicker">⚙️ Cómo trabajamos</div>
+    <h2 class="big-line reveal">De la chacra a la bolsa, en menos de 48 horas</h2>
+    <div class="process-list">
+      <div class="p-step reveal">
+        <span class="step-num">1</span>
+        <h3>Selección</h3>
+        <p class="step-desc">Compramos directamente a productores de Huánuco y Junín, priorizando variedades nativas.</p>
+      </div>
+      <div class="p-step reveal">
+        <span class="step-num">2</span>
+        <h3>Corte y lavado</h3>
+        <p class="step-desc">Cada insumo se corta el mismo día de ingreso a planta para conservar textura y humedad.</p>
+      </div>
+      <div class="p-step reveal">
+        <span class="step-num">3</span>
+        <h3>Fritura en tandas</h3>
+        <p class="step-desc">Tandas pequeñas a temperatura controlada; ningún lote espera más de 20 minutos.</p>
+      </div>
+      <div class="p-step reveal">
+        <span class="step-num">4</span>
+        <h3>Control de calidad</h3>
+        <p class="step-desc">Muestreo de sabor y crocante en cada lote antes de pasar a distribución.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIFRAS -->
+<section class="stats">
+  <div class="stat"><span class="n" data-count="26">0</span><span class="l">Años en el rubro</span></div>
+  <div class="stat"><span class="n" data-count="180">0</span><span class="l">Puntos de venta en Lima</span></div>
+  <div class="stat"><span class="n" data-count="14">0</span><span class="l">Productores aliados</span></div>
+  <div class="stat"><span class="n" data-count="5">0</span><span class="l">Líneas de producto</span></div>
+</section>
+
+<!-- VALORES -->
+<section class="section-pad">
+  <div class="container">
+    <div class="kicker">✨ Lo que no negociamos</div>
+    <h2 class="big-line reveal">Tres cosas que se quedan igual aunque crezcamos</h2>
+    <div class="values">
+      <div class="value reveal">
+        <span class="emoji">🤝</span>
+        <h3>Insumo local</h3>
+        <p>Compramos a productores que conocemos por nombre, no a intermediarios de bolsa.</p>
+      </div>
+      <div class="value reveal">
+        <span class="emoji">🔥</span>
+        <h3>Lote pequeño</h3>
+        <p>Preferimos tandas cortas y frescas antes que volumen que sacrifique sabor.</p>
+      </div>
+      <div class="value reveal">
+        <span class="emoji">🔍</span>
+        <h3>Trazabilidad real</h3>
+        <p>Cada bolsa puede rastrearse hasta el lote y la fecha exacta de fritura.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="cta">
+  <div class="container">
+    <div class="kicker">📦 Trabajemos juntos</div>
+    <h2 class="reveal">¿Quieres vender FRANCO'S en tu local?</h2>
+    <p class="lede reveal">Atendemos pedidos mayoristas para bodegas, minimarkets y cadenas en Lima Metropolitana.</p>
+    <a class="cta-btn" href="mailto:ventas@francossnacks.pe">Escribir a ventas 👋</a>
+  </div>
+</section>
+
+<footer class="container">
+  <div>© 2026 FRANCO'S Snacks. Lima, Perú.</div>
+  <div class="f-links">
+    <a href="#quienes-somos">Nosotros</a>
+    <a href="#productos">Productos</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if(!reduceMotion){
+  gsap.timeline()
+    .from('.hero-badge', {y:20, opacity:0, duration:0.7, ease:'power2.out'})
+    .from('.hero-copy h1', {y:30, opacity:0, duration:0.8, ease:'power2.out'}, '-=0.5')
+    .from('.hero-copy .lede', {y:20, opacity:0, duration:0.6}, '-=0.5')
+    .from('.hero-features li', {y:16, opacity:0, duration:0.5, stagger:0.1}, '-=0.4')
+    .from('.hero-circle', {scale:0.6, opacity:0, duration:1.2, ease:'power3.out', stagger:0.08}, 0);
+
+  gsap.utils.toArray('.hero-circle').forEach((el,i)=>{
+    gsap.to(el, {
+      yPercent: i%2===0 ? -18 : 12, ease:'none',
+      scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}
+    });
+  });
+
+  gsap.utils.toArray('.reveal').forEach(el=>{
+    gsap.to(el, {
+      opacity:1, y:0, duration:0.8, ease:'power2.out',
+      scrollTrigger:{trigger:el, start:'top 85%'}
+    });
+  });
+
+  const track = document.getElementById('productsTrack');
+  let scrollDist = () => track.scrollWidth - window.innerWidth + window.innerWidth*0.06;
+  gsap.to(track, {
+    x: () => -scrollDist(),
+    ease:'none',
+    scrollTrigger:{
+      trigger:'.products-pin', start:'top top', end:() => '+=' + scrollDist(),
+      scrub:true, pin:true, invalidateOnRefresh:true
+    }
+  });
+
+  gsap.to('.hero-strip', {xPercent:-25, ease:'none', repeat:-1, duration:14});
+
+  gsap.utils.toArray('.stat .n').forEach(el=>{
+    const target = +el.dataset.count;
+    ScrollTrigger.create({
+      trigger: el, start:'top 90%', once:true,
+      onEnter: () => {
+        gsap.to(el, {
+          innerText: target, duration:1.4, ease:'power1.out', snap:{innerText:1},
+          onUpdate: function(){ el.innerText = Math.round(this.targets()[0].innerText); }
+        });
+      }
+    });
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(el=>{el.style.opacity=1; el.style.transform='none';});
+  document.querySelectorAll('.stat .n').forEach(el=>{el.innerText = el.dataset.count;});
+}
+</script>
+</body>
+</html>
