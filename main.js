@@ -4,7 +4,8 @@
  * Estructura del archivo:
  *   1. Datos de productos (reemplazar acá cuando haya fotos reales)
  *   2. Render de productos en el DOM
- *   3. Animaciones GSAP (respetan prefers-reduced-motion)
+ *   3. Carrusel de productos (autoplay + controles manuales)
+ *   4. Animaciones GSAP de scroll (respetan prefers-reduced-motion)
  *
  * Para reemplazar un placeholder de producto por una foto real:
  *   - Súbanla directo a la raíz del repo, junto a index.html
@@ -84,6 +85,108 @@ function renderProducts() {
   `).join('');
 }
 
+/**
+ * Carrusel de productos: autoplay cada 3s + controles manuales.
+ * - Flechas prev/next y puntos indicadores.
+ * - Botón de pausa (requisito de accesibilidad: WCAG 2.2.2 exige poder
+ *   detener contenido que se mueve solo).
+ * - Se pausa automáticamente con hover, foco de teclado o swipe táctil,
+ *   y se reanuda al soltar (salvo que el usuario la haya pausado a propósito).
+ * - Respeta prefers-reduced-motion: no autoavanza, pero los controles
+ *   manuales siguen funcionando.
+ */
+function initProductsCarousel() {
+  const viewport = document.querySelector('.carousel-viewport');
+  const track = document.getElementById('productsTrack');
+  const dotsWrap = document.getElementById('carouselDots');
+  const btnPrev = document.getElementById('carouselPrev');
+  const btnNext = document.getElementById('carouselNext');
+  const btnToggle = document.getElementById('carouselToggle');
+  if (!track || !viewport) return;
+
+  const AUTOPLAY_MS = 3000;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const total = PRODUCTS.length;
+
+  let index = 0;
+  let autoplayId = null;
+  let userPaused = false;
+
+  dotsWrap.innerHTML = PRODUCTS.map((p, i) => `
+    <button type="button" role="tab" aria-label="Ir a ${p.title}" data-index="${i}"></button>
+  `).join('');
+  const dots = Array.from(dotsWrap.children);
+
+  function stepWidth() {
+    const card = track.querySelector('.p-card');
+    if (!card) return 0;
+    const gap = parseFloat(getComputedStyle(track).gap) || 0;
+    return card.getBoundingClientRect().width + gap;
+  }
+
+  function render() {
+    track.style.transform = `translateX(-${index * stepWidth()}px)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+  }
+
+  function goTo(i) {
+    index = (i + total) % total;
+    render();
+  }
+  function next() { goTo(index + 1); }
+  function prev() { goTo(index - 1); }
+
+  function startAutoplay() {
+    if (reduceMotion || userPaused) return;
+    stopAutoplay();
+    autoplayId = setInterval(next, AUTOPLAY_MS);
+  }
+  function stopAutoplay() {
+    clearInterval(autoplayId);
+    autoplayId = null;
+  }
+
+  function setUserPaused(paused) {
+    userPaused = paused;
+    btnToggle.setAttribute('aria-pressed', String(paused));
+    btnToggle.setAttribute('aria-label', paused ? 'Reanudar reproducción automática' : 'Pausar reproducción automática');
+    btnToggle.querySelector('span').textContent = paused ? '▶' : '⏸';
+    paused ? stopAutoplay() : startAutoplay();
+  }
+
+  btnNext.addEventListener('click', () => { next(); startAutoplay(); });
+  btnPrev.addEventListener('click', () => { prev(); startAutoplay(); });
+  dots.forEach(d => d.addEventListener('click', () => { goTo(+d.dataset.index); startAutoplay(); }));
+  btnToggle.addEventListener('click', () => setUserPaused(!userPaused));
+
+  // Pausa mientras el mouse está encima o hay foco de teclado dentro
+  viewport.addEventListener('mouseenter', stopAutoplay);
+  viewport.addEventListener('mouseleave', startAutoplay);
+  viewport.addEventListener('focusin', stopAutoplay);
+  viewport.addEventListener('focusout', startAutoplay);
+
+  // Swipe táctil
+  let startX = 0, dragging = false;
+  viewport.addEventListener('touchstart', e => {
+    dragging = true;
+    startX = e.touches[0].clientX;
+    stopAutoplay();
+  }, { passive: true });
+  viewport.addEventListener('touchend', e => {
+    if (!dragging) return;
+    const deltaX = e.changedTouches[0].clientX - startX;
+    if (Math.abs(deltaX) > 40) { deltaX < 0 ? next() : prev(); }
+    dragging = false;
+    startAutoplay();
+  });
+
+  // Recalcular la posición si cambia el ancho de pantalla (responsive)
+  window.addEventListener('resize', render);
+
+  render();
+  startAutoplay();
+}
+
 function initAnimations() {
   gsap.registerPlugin(ScrollTrigger);
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -134,27 +237,11 @@ function initAnimations() {
       }
     });
     storyLines.forEach((line, i) => {
-      storyTl.to(line, { color: 'rgba(255,255,255,1)', duration: 1, ease: 'none' }, i);
+      // La línea actual "aparece": sube y se vuelve visible
+      storyTl.to(line, { opacity: 1, y: 0, duration: 1, ease: 'none' }, i);
       if (i > 0) {
-        storyTl.to(storyLines[i - 1], { color: 'rgba(255,255,255,0.28)', duration: 1, ease: 'none' }, i);
-      }
-    });
-  }
-
-  // ---- Productos: scroll vertical -> desplazamiento horizontal pineado ----
-  const track = document.getElementById('productsTrack');
-  if (track) {
-    const scrollDist = () => track.scrollWidth - window.innerWidth + window.innerWidth * 0.06;
-    gsap.to(track, {
-      x: () => -scrollDist(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.products-pin',
-        start: 'top top',
-        end: () => '+=' + scrollDist(),
-        scrub: true,
-        pin: true,
-        invalidateOnRefresh: true
+        // La línea anterior "desaparece": se desvanece y sube un poco más
+        storyTl.to(storyLines[i - 1], { opacity: 0.08, y: -18, duration: 1, ease: 'none' }, i);
       }
     });
   }
@@ -214,5 +301,6 @@ function initAnimations() {
 
 document.addEventListener('DOMContentLoaded', () => {
   renderProducts();
+  initProductsCarousel();
   initAnimations();
 });
