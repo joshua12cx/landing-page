@@ -79,15 +79,32 @@
     </div>
   </section>
 
-  <!-- PRODUCTOS — scroll horizontal pineado (el momento "GTA") -->
-  <section id="productos" class="products-pin">
-    <div class="products-head">
+  <!-- PRODUCTOS — carrusel con autoplay + controles manuales -->
+  <section id="productos" class="products-section">
+    <div class="container products-head">
       <div class="kicker">🍿 Catálogo</div>
       <h2 class="big-line">Lo que sale de nuestra cocina</h2>
     </div>
-    <!-- Las tarjetas se generan desde main.js (arreglo PRODUCTS) -->
-    <div class="products-track" id="productsTrack"></div>
+    <div class="carousel" id="productsCarousel" aria-roledescription="carrusel" aria-label="Catálogo de productos FRANCO'S">
+      <div class="carousel-viewport">
+        <!-- Las tarjetas se generan desde main.js (arreglo PRODUCTS) -->
+        <div class="carousel-track" id="productsTrack"></div>
+      </div>
+      <button type="button" class="carousel-btn prev" id="carouselPrev" aria-label="Producto anterior">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="carousel-btn next" id="carouselNext" aria-label="Producto siguiente">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="carousel-controls container">
+      <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="Seleccionar producto"></div>
+      <button type="button" class="carousel-toggle" id="carouselToggle" aria-pressed="false" aria-label="Pausar reproducción automática">
+        <span aria-hidden="true">⏸</span>
+      </button>
+    </div>
   </section>
+
 
   <!-- PROCESO — línea de tiempo vertical con scroll-scrub -->
   <section id="proceso" class="process-pin">
